@@ -12,8 +12,16 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      clipPath: {
+        arch: "polygon(50% 0%, 100% 0, 100% 85%, 0 85%, 0 0)",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require("tailwind-clip-path"), 
+  ],
 };
+
 export default config;
+
+
