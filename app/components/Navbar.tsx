@@ -51,10 +51,10 @@ const Navbar = () => {
           <Link href="/" className="text-white hover:text-black rounded-md px-3 py-2">
             صفحه اصلی
           </Link>
-          <Link href="/products" className="text-white  hover:text-black rounded-md px-3 py-2 hover:scale-200 transform transition-transform duration-200">
+          <Link href="/showcase" className="text-white  hover:text-black rounded-md px-3 py-2 hover:scale-200 transform transition-transform duration-200">
             محصولات
           </Link>
-          <Link href="/contact" className="text-white hover:text-black rounded-md px-3 py-2">
+          <Link href="/components/contact" className="text-white hover:text-black rounded-md px-3 py-2">
             تماس با ما
           </Link>
         </div>
