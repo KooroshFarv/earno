@@ -29,7 +29,7 @@ const Showcase = () => {
   const fetchProducts = async () => {
     try {
       const res = await fetch('/api/products'); 
-      if (!res.ok) throw new Error('Failed to fetch products');
+      if (!res.ok) throw new Error('Failed to fetch productsss');
       const data = await res.json();
       setProducts(data);
     } catch (error) {

@@ -13,4 +13,8 @@ model products {
   image       String
   description String
   video       String?
+  price       Float?
+  detailedImage String? // each product image hehhh
+  detailedImageSmall String?
+
 }
