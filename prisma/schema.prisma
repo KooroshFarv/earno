@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model SmallImages {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String   @db.VarChar(255)
+  productId Int
+  product   products @relation(fields: [productId], references: [id])
+}
+
 model products {
   id          Int     @id @default(autoincrement())
   name        String  @db.VarChar(255)
@@ -14,7 +21,31 @@ model products {
   description String
   video       String?
   price       Float?
-  detailedImage String? // each product image hehhh
-  detailedImageSmall String?
+  detailedImage String?
+  smallImages SmallImages[]
+  cartItems   Cart[] 
+}
 
+model Users {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  cartItems Cart[]   
+}
+
+model Cart {
+  id          Int      @id @default(autoincrement())
+  userId      Int      
+  productId   Int     
+  quantity    Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+
+
+
+  user        Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     products @relation(fields: [productId], references: [id], onDelete: Cascade)
 }

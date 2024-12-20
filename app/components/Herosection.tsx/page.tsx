@@ -7,7 +7,7 @@ const HeroSection = () => {
   return (
     <div className="relative flex h-screen w-screen m-0 p-0">  
     <div className="fixed top-0 left-24 z-50 w-full" >
-        <Navbar />
+  
     </div>
       {/* Background Image */}
       <Image

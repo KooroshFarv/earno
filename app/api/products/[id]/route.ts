@@ -12,7 +12,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     const product = await prisma.products.findUnique({
       where: { id },
-   
+      include : {
+        smallImages : true,
+      },
        });
 
     if (!product) {

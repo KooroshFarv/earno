@@ -1,6 +1,7 @@
 import React, { Children, ReactNode } from 'react'
 import '@/assets/globals.css'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer/page'
 
 interface Props {
   children : string
@@ -14,8 +15,10 @@ const MainLayout = ({children} : Props) => {
       </head>
       <body>
         <main>
+          <Navbar />
          {children}
         </main>
+        <Footer />
       </body>
     </html>
   )

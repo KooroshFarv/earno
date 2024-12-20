@@ -1,101 +1,76 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '@/public/images/mainLogo.png';
-
-
-
+import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
-   const [lastScrollY, setLastScrollY] = useState(0);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const pathname = usePathname();
+  const isHomepage = pathname === '/';
 
+  // Determine link color based on the current page
+  const linkColor = isHomepage ? 'text-white' : 'text-black';
 
-
-   useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      if(scrollY === 0){
-        setIsVisible(true)
-      }else {
-        setIsVisible(false);
+      const currentScrollY = window.scrollY;
+
+      // Show/hide navbar based on scroll direction
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsVisible(false); // Hide navbar when scrolling down
+      } else {
+        setIsVisible(true); // Show navbar when scrolling up
       }
+
       setLastScrollY(currentScrollY);
+    };
 
-    }
-
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-    }
-   },[lastScrollY])
-
-
-
-
+    };
+  }, [lastScrollY]);
 
   return (
-    <nav>
-       <div className={`container mx-auto fixed transition-transform duration-700  flex justify-between items-center h-20 ${isVisible ? 'translate-y-0 ' : '-translate-y-full '} `}>
-        {/* Logo on the Left */}
+    <nav
+      className={`fixed top-0 w-full z-50 transition-transform duration-500 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      } bg-transparent`}
+    >
+      <div className="container mx-auto flex justify-between items-center h-20">
+        {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/">
             <Image src={logo} alt="Logo" width={50} height={50} />
           </Link>
         </div>
 
-        {/* Center Links */}
+        {/* Navigation Links */}
         <div className="hidden md:flex space-x-8">
-          <Link href="/" className="text-white hover:text-black rounded-md px-3 py-2">
+          <Link href="/" className={`${linkColor} hover:underline`}>
             صفحه اصلی
           </Link>
-          <Link href="/showcase" className="text-white  hover:text-black rounded-md px-3 py-2 hover:scale-200 transform transition-transform duration-200">
+          <Link href="/showcase" className={`${linkColor} hover:underline`}>
             محصولات
           </Link>
-          <Link href="/components/contact" className="text-white hover:text-black rounded-md px-3 py-2">
+          <Link href="/components/contact" className={`${linkColor} hover:underline`}>
             تماس با ما
           </Link>
         </div>
 
-        {/* Login/Register on the Right */}
+        {/* Login/Register */}
         <div className="hidden md:flex items-center">
-          <button className="flex items-center text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-            <i className="fa-brands fa-google text-white mr-2"> </i>
-            <span>ورود | ثبت‌نام  </span>
-          </button>
-        </div>
-        
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
           <button
-            type="button"
-            className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
+            className={`flex items-center rounded-md px-3 py-2 transition ${
+              linkColor === 'text-white' ? 'hover:bg-gray-700 hover:text-white' : 'hover:bg-gray-300 hover:text-black'
+            } ${linkColor}`}
           >
-            <span className="sr-only">Open main menu</span>
-            {/* Icon for mobile menu (e.g., hamburger icon) */}
-          </button>
-        </div>
-      </div>
-      
-      {/* Mobile menu (shown on smaller screens) */}
-      <div className="md:hidden" id="mobile-menu">
-        <div className="space-y-1 px-2 pb-3 pt-2">
-          <Link href="/" className="text-white block rounded-md px-3 py-2">
-            صفحه اصلی
-          </Link>
-          <Link href="/products" className="text-white block rounded-md px-3 py-2">
-            محصولات
-          </Link>
-          <Link href="/contact" className="text-white block rounded-md px-3 py-2">
-            تماس با ما
-          </Link>
-          <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 rounded-md px-3 py-2 mt-4">
             <i className="fa-brands fa-google mr-2"></i>
-            <span>Login or Register</span>
+            <span>ورود | ثبت‌نام</span>
           </button>
         </div>
       </div>
