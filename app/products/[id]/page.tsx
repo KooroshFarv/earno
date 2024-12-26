@@ -11,14 +11,7 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
   const [loading, setLoading] = useState(true);
   const [ quantity ,setQuantity] = useState(1)
 
-  const incQuantity = () => {
-    setQuantity((prev) => prev +1)
-  };
-
-  const decQuantity = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
-  }
-
+  
   const addToCart = () => {
     toast.success("محصول به سبد خرید اضافه شد", {
       position: "top-right",
@@ -120,34 +113,29 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
         </div>
       </div>
 
-      {product.video && (
+      {/* {product.video && (
   <div className="video-section">
     <video controls className="w-full max-w-lg">
       <source src={product.video} type="video/mp4" />
       مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
     </video>
   </div>
-)}
+)} */}
 
       {/* Left Side - Product Info */}
       <div className="w-1/3 flex flex-col justify-center text-right space-y-6">
         <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-        <span className="text-2xl font-semibold text-gray-500">
-          {product.price} تومان </span>
+       
         <p className="text-lg leading-relaxed text-gray-600">
           {product.description}
         </p>
 
-          <div className="flex items-center space-x-4">
-            <button onClick={decQuantity} className="px-4 py-2 bg-gray-600 text-white rounded shadow hover:bg-black">
-            -
-            </button>
-         
-            <span className="text-xl font-semibold">{quantity}</span>
-            <button onClick={incQuantity} className="px-4 py-2 bg-gray-600 text-white  rounded shadow hover:bg-black">
-              +
-            </button>
-</div>
+        <span className="text-2xl text-left font-semibold text-gray-500">
+        {product.price} تومان </span>
+
+
+          {/* add to carttttttt */}
+     
         <button onClick={addToCart} className=" bg-gray-700 text-white py-3 px-6 rounded-lg shadow hover:bg-black transition">
           اضافه به سبد خرید
         </button>

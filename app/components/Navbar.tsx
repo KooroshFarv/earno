@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logo from '@/public/images/mainLogo.png';
 import { usePathname } from 'next/navigation';
+import { HiOutlineShoppingCart } from "react-icons/hi";
+
 
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -72,6 +74,12 @@ const Navbar = () => {
             <i className="fa-brands fa-google mr-2"></i>
             <span>ورود | ثبت‌نام</span>
           </button>
+          <Link href={'/components/Cart'}>
+          <button>
+          <HiOutlineShoppingCart className='text-2xl text-white' />
+          </button>
+
+          </Link>
         </div>
       </div>
     </nav>

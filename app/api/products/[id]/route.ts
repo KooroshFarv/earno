@@ -27,3 +27,5 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+// fetching each product
