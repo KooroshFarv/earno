@@ -49,3 +49,5 @@ model Cart {
   user        Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   product     products @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
+
+

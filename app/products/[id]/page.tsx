@@ -12,7 +12,27 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
   const [ quantity ,setQuantity] = useState(1)
 
   
-  const addToCart = () => {
+  const addToCart = async() => {
+
+    try{
+      console.log('sending to/api/cart',{
+        userId:1,
+        productId: product.id,
+        quantity,
+      })
+      const response = await fetch('/api/cart',{
+        method : 'POST',
+      headers : {'Content-Type' : 'application/json'},
+      body : JSON.stringify({
+        userId : 1,
+        productId : product.id,
+        quantity: quantity,
+      }),
+      })
+      if(!response.ok){
+        throw new Error('Faild')
+      }
+    
     toast.success("محصول به سبد خرید اضافه شد", {
       position: "top-right",
       autoClose: 2000,
@@ -21,8 +41,11 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
       pauseOnHover: true,
       draggable: true,
     });
-  };
-
+  } catch (error) {
+    toast.error('دوباره تلاش کنید');
+    console.log(error)
+  }
+  }
 
   useEffect(() => {
     const resolveParams = async () => {
