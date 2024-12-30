@@ -4,9 +4,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 
-export async function GET() {
-  return NextResponse.json({ message: 'API is working' });
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -57,26 +54,26 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// export async function GET(req: NextRequest) {
-//     try {
-//       const { searchParams } = new URL(req.url);
-//       const userId = searchParams.get('userId');
+export async function GET(req: NextRequest) {
+    try {
+      const { searchParams } = new URL(req.url);
+      const userId = searchParams.get('userId');
   
-//       if (!userId) {
-//         return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
-//       }
+      if (!userId) {
+        return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+      }
   
-//       const cartItems = await prisma.cart.findMany({
-//         where: { userId: parseInt(userId, 10) },
-//         include: { product: true }, // Include product details
-//       });
+      const cartItems = await prisma.cart.findMany({
+        where: { userId: parseInt(userId, 10) },
+        include: { product: true }, // Include product details
+      });
   
-//       return NextResponse.json(cartItems);
-//     } catch (error) {
-//       console.error('Error fetching cart:', error);
-//       return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-//     }
-//   }
+      return NextResponse.json(cartItems);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+  }
   
 
   export async function PATCH(req: NextRequest) {
