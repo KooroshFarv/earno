@@ -4,27 +4,26 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logo from '@/public/images/mainLogo.png';
 import { usePathname } from 'next/navigation';
-import { HiOutlineShoppingCart } from "react-icons/hi";
-
+import { HiOutlineShoppingCart } from 'react-icons/hi';
+import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs';
 
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
   const isHomepage = pathname === '/';
+  const { openSignIn } = useClerk(); // Clerk API to open Sign-In modal
 
-  // Determine link color based on the current page
   const linkColor = isHomepage ? 'text-white' : 'text-black';
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Show/hide navbar based on scroll direction
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        setIsVisible(false); // Hide navbar when scrolling down
+        setIsVisible(false);
       } else {
-        setIsVisible(true); // Show navbar when scrolling up
+        setIsVisible(true);
       }
 
       setLastScrollY(currentScrollY);
@@ -64,22 +63,72 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Login/Register */}
-        <div className="hidden md:flex items-center">
-          <button
-            className={`flex items-center rounded-md px-3 py-2 transition ${
-              linkColor === 'text-white' ? 'hover:bg-gray-700 hover:text-white' : 'hover:bg-gray-300 hover:text-black'
-            } ${linkColor}`}
-          >
-            <i className="fa-brands fa-google mr-2"></i>
-            <span>ورود | ثبت‌نام</span>
-          </button>
-          <Link href={'/components/Cart'}>
-          <button>
-          <HiOutlineShoppingCart className='text-2xl text-white' />
-          </button>
+        {/* Authentication and Cart */}
+        <div className="hidden md:flex items-center space-x-4">
+    
+        <SignedOut>
+  <button
+    onClick={() =>
+      openSignIn({
+        appearance: {
+          elements: {
+            // General card styling
+            card: 'bg-black text-white rounded-lg shadow-lg p-8',
+            // Input fields
+            input: 'bg-gray-700 text-white border-none rounded-lg px-4 py-2 placeholder-gray-400',
+            // Social button styling (Google button)
+            socialButtonsBlockButton: 'bg-gray-700 text-white hover:bg-gray-600 flex items-center justify-center', // Force button and text styling
+            socialButtonsBlockButtonText: 'text-white font-bold', // Ensure text is white
+            // Footer
+            footer: 'hidden', // Hide footer
+            // Header
+            headerTitle: 'text-xl font-bold text-white',
+            headerSubtitle: 'text-white',
+            // Close button
+            closeButton: 'text-white hover:text-gray-300',
+          },
+        },
+      })
+    }
+    className={`flex items-center rounded-md px-3 py-2 transition ${
+      linkColor === 'text-white'
+        ? 'hover:bg-gray-700 hover:text-white'
+        : 'hover:bg-gray-300 hover:text-black'
+    } ${linkColor}`}
+  >
+    <i className="fa-brands fa-google mr-2"></i>
+    <p>ورود | ثبت‌نام</p>
+  </button>
+</SignedOut>
 
-          </Link>
+
+
+
+          <SignedIn>
+            <Link href="/dashboard">
+              <button
+                className={`flex items-center rounded-md px-3 py-2 transition ${
+                  linkColor === 'text-white'
+                    ? 'hover:bg-gray-700 hover:text-white'
+                    : 'hover:bg-gray-300 hover:text-black'
+                } ${linkColor}`}
+              >
+                داشبورد
+              </button>
+            </Link>
+
+            <Link href="/components/Cart">
+              <button>
+                <HiOutlineShoppingCart
+                  className={`text-2xl ${
+                    linkColor === 'text-white' ? 'text-white' : 'text-black'
+                  }`}
+                />
+              </button>
+            </Link>
+
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
     </nav>

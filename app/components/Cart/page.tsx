@@ -127,9 +127,9 @@ const CartPage = () => {
           </button>
           <button
             onClick={() => removeItem(item.id)}
-            className="ml-4 text-red-600"
+            className="ml-4 text-gray-400"
           >
-            حذف
+            x
           </button>
         </div>
       </div>
