@@ -2,59 +2,49 @@
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
-
-const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => {
-  const [params , setParams] = useState<{id : string} | null>(null)
+const ProductPage = ({ params: paramsPromise }: { params: { id: string } }) => {
+  const [params, setParams] = useState<{ id: string } | null>(null);
   const [product, setProduct] = useState<any>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [ quantity ,setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(1);
 
-  
-  const addToCart = async() => {
+  const addToCart = async () => {
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: 1,
+          productId: product.id,
+          quantity: quantity,
+        }),
+      });
+      if (!response.ok) throw new Error("Failed to add to cart");
 
-    try{
-      console.log('sending to/api/cart',{
-        userId:1,
-        productId: product.id,
-        quantity,
-      })
-      const response = await fetch('/api/cart',{
-        method : 'POST',
-      headers : {'Content-Type' : 'application/json'},
-      body : JSON.stringify({
-        userId : 1,
-        productId : product.id,
-        quantity: quantity,
-      }),
-      })
-      if(!response.ok){
-        throw new Error('Faild')
-      }
-    
-    toast.success("محصول به سبد خرید اضافه شد", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  } catch (error) {
-    toast.error('دوباره تلاش کنید');
-    console.log(error)
-  }
-  }
+      toast.success("محصول به سبد خرید اضافه شد", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } catch (error) {
+      toast.error("دوباره تلاش کنید");
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const resolveParams = async () => {
-      const resolveParams = await paramsPromise
-      setParams(resolveParams)
-    }
-    resolveParams()
-  }, [paramsPromise])
-
+      const resolvedParams = await paramsPromise;
+      setParams(resolvedParams);
+    };
+    resolveParams();
+  }, [paramsPromise]);
 
   useEffect(() => {
     if (!params) return;
@@ -78,9 +68,7 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
   if (loading) return <p className="text-center mt-10">در حال بارگذاری...</p>;
   if (!product) return <p className="text-center mt-10">محصول یافت نشد.</p>;
 
-
-  const smallImages = product.smallImages?.map((img: any) => img.imageUrl) ;
-
+  const smallImages = product.smallImages?.map((img: any) => img.imageUrl);
 
   const prevImage = () => {
     setCurrentImageIndex((prev) =>
@@ -95,17 +83,25 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
   };
 
   return (
-    <div className="bg-gray-100 text-black min-h-screen flex flex-row-reverse p-10">
-      {/* Right Side - Images */}
-      <div className="w-1/2 flex flex-col items-center">
-        {/* Big Image */}
-        <div className="relative w-[600px] rounded-3xl h-[80vh] overflow-hidden mb-4">
+    <motion.div
+      className="bg-gray-100 text-black min-h-screen flex flex-row-reverse p-10"
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      {/* right side */}
+      <motion.div
+        className="w-1/2 flex flex-col items-center"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <div className="relative w-[600px] rounded-3xl h-[71vh] mt-20 overflow-hidden mb-4">
           <img
             src={smallImages[currentImageIndex]}
             alt={product.name}
-            className="w-full h-full object-cover rounded-lg shadow-lg"
+            className="w-full h-full object-cover rounded-lg  shadow-lg"
           />
-          {/* Navigation Arrows */}
           <button
             onClick={prevImage}
             className="absolute bottom-4 left-2 bg-white text-black p-2 rounded-full shadow-xl hover:bg-gray-700 hover:text-white transition"
@@ -120,60 +116,48 @@ const ProductPage = ({ params : paramsPromise }: { params: { id: string } }) => 
           </button>
         </div>
 
-        {/* Small Images */}
-        <div className="flex space-x-4">
-          {smallImages.map((img: string, index : number) => (
-            <img
+        <div className="flex space-x-4 ">
+          {smallImages.map((img: string, index: number) => (
+            <motion.img
               key={index}
-              src={img} 
+              src={img}
               alt={`Small Image ${index + 1}`}
-              className={`w-24 h-20 object-cover rounded-lg shadow cursor-pointer hover:scale-110 transition ${
+              className={`w-24 h-20 object-cover  rounded-lg shadow cursor-pointer hover:scale-110 transition ${
                 index === currentImageIndex ? "ring-2 ring-blue-800" : ""
               }`}
               onClick={() => setCurrentImageIndex(index)}
+              whileHover={{ scale: 1.1 }}
             />
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* {product.video && (
-  <div className="video-section">
-    <video controls className="w-full max-w-lg">
-      <source src={product.video} type="video/mp4" />
-      مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
-    </video>
-  </div>
-)} */}
-
-      {/* Left Side - Product Info */}
-      <div className="w-1/3 flex flex-col justify-center text-right space-y-6">
-        <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-       
-        <p className="text-lg leading-relaxed text-gray-600">
-          {product.description}
-        </p>
-
+      {/* left side*/}
+      <motion.div
+        className="max-w-2xl  flex flex-col justify-center text-right"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <h1 className="text-3xl font-bold text-gray-800 mb-14 mt-24">{product.name}</h1>
+        <p className="text-lg leading-relaxed text-gray-600 mb-10 mt-16">{product.description}</p>
         <span className="text-2xl text-left font-semibold text-gray-500">
-        {product.price} تومان </span>
-
-
-          {/* add to carttttttt */}
-     
-        <button onClick={addToCart} className=" bg-gray-700 text-white py-3 px-6 rounded-lg shadow hover:bg-black transition">
+          {product.price} تومان
+        </span>
+        <motion.button
+          onClick={addToCart}
+          className="bg-gray-700 text-white mb-24 mt-4 py-3 px-6 rounded-lg shadow hover:bg-black transition"
+          whileHover={{ scale: 1.05 }}
+        >
           اضافه به سبد خرید
-        </button>
+        </motion.button>
+        <div className="bg-black w-full h-40  rounded-lg flex items-center justify-center">
+      <p className="text-white text-lg">ویدیو به زودی اضافه می‌شود</p>
+    </div>
+      </motion.div>
 
-        </div>
-        <ToastContainer position="top-right" autoClose={3000} />
-
-      </div>
-
-
-
-
-
-
-      
+      <ToastContainer position="top-right" autoClose={3000} />
+    </motion.div>
   );
 };
 

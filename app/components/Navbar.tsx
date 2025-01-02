@@ -5,6 +5,7 @@ import Image from 'next/image';
 import logo from '@/public/images/mainLogo.png';
 import { usePathname } from 'next/navigation';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs';
 
 const Navbar = () => {
@@ -12,7 +13,7 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
   const isHomepage = pathname === '/';
-  const { openSignIn } = useClerk(); // Clerk API to open Sign-In modal
+  const { openSignIn } = useClerk(); 
 
   const linkColor = isHomepage ? 'text-white' : 'text-black';
 
@@ -66,7 +67,7 @@ const Navbar = () => {
         {/* Authentication and Cart */}
         <div className="hidden md:flex items-center space-x-4">
     
-        <SignedOut>
+     <SignedOut>
   <button
     onClick={() =>
       openSignIn({
@@ -101,34 +102,33 @@ const Navbar = () => {
   </button>
 </SignedOut>
 
+<SignedIn>
+  <Link href="/dashboard">
+    <button
+      className={`flex items-center rounded-md px-3 py-2 transition ${
+        linkColor === 'text-white'
+          ? 'hover:bg-gray-700 hover:text-white'
+          : 'hover:bg-gray-300 hover:text-black'
+      } ${linkColor}`}
+    >
+      داشبورد
+    </button>
+  </Link>
 
 
+  <UserButton />
+</SignedIn>
 
-          <SignedIn>
-            <Link href="/dashboard">
-              <button
-                className={`flex items-center rounded-md px-3 py-2 transition ${
-                  linkColor === 'text-white'
-                    ? 'hover:bg-gray-700 hover:text-white'
-                    : 'hover:bg-gray-300 hover:text-black'
-                } ${linkColor}`}
-              >
-                داشبورد
-              </button>
-            </Link>
+<Link href="/components/Cart">
+  <button>
+    <AiOutlineShoppingCart 
+      className={`text-2xl ${
+        isHomepage ? 'text-white' : 'text-black'
+      }`}
+    />
+  </button>
+</Link>
 
-            <Link href="/components/Cart">
-              <button>
-                <HiOutlineShoppingCart
-                  className={`text-2xl ${
-                    linkColor === 'text-white' ? 'text-white' : 'text-black'
-                  }`}
-                />
-              </button>
-            </Link>
-
-            <UserButton />
-          </SignedIn>
         </div>
       </div>
     </nav>
